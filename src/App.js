@@ -8,8 +8,8 @@ import './App.css'
 
 class App extends React.Component {
 	state = {
-		currFrom: '',
-		currTo: '',
+		currFrom: 'EUR',
+		currTo: 'USD',
 		amount: '',
 		rate: 0
 	}
@@ -21,20 +21,13 @@ class App extends React.Component {
 	}
 
 	handleFromCountryChange = (countryFrom) => {
-		this.setState({currFrom: countryFrom})
+		this.setState({currFrom: countryFrom}, () => this.fetchRate())
 	}
 	handleToCountryChange = (countryTo) => {
-		this.setState({currTo: countryTo})
+		this.setState({currTo: countryTo}, () => this.fetchRate())
 	}
 	handleInputChange = (e) => {
 		this.setState({amount: e.target.value})
-	}
-
-	componentDidUpdate() {
-		const { currFrom, currTo } = this.state;
-		if( currFrom !== '' && currTo !== '' ) {
-			this.fetchRate()
-		}
 	}
 
 	render() {

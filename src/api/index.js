@@ -5,8 +5,8 @@
 */
 import axios from 'axios';
 
-const URL = 'http://data.fixer.io/api/latest';
-const API_KEY = process.env.REACT_APP_CURRENCY_API_KEY
+const URL = 'https://v6.exchangerate-api.com/v6/';
+const API_KEY = process.env.REACT_APP_CURRENCY_API_KEY_2
 
 export const getCountryNames = async () => {
 	const {data} = await axios.get('https://restcountries.com/v2/all')
@@ -17,9 +17,11 @@ export const getCountryNames = async () => {
 }
 
 export const getExchangeRate = async (fromCurr, toCurr) => {
-	const {data: {rates}} = await axios.get(`${URL}?access_key=${API_KEY}`)
-	const euro = 1 / rates[fromCurr]
-	const exchanged = euro * rates[toCurr]
+	const {data: {conversion_rates}} = await axios.get(`${URL}${API_KEY}/latest/EUR`)
+	const response = await axios.get(`${URL}${API_KEY}/latest/EUR`)
+	console.log(response)
+	const euro = 1 / conversion_rates[fromCurr]
+	const exchanged = euro * conversion_rates[toCurr]
 
 	if(isNaN(exchanged)) {
 		throw new Error(`Unable to get currency ${fromCurr} & ${toCurr}`)
