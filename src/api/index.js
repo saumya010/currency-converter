@@ -8,13 +8,15 @@ import axios from 'axios';
 const URL = 'http://data.fixer.io/api/latest';
 const API_KEY = process.env.REACT_APP_CURRENCY_API_KEY
 
-export const getSymbols = async () => {
-	const {data: {rates}} = await axios.get(`${URL}?access_key=${API_KEY}`)
-	console.log(Object.keys(rates))
+export const getCountryNames = async () => {
+	const {data} = await axios.get('https://restcountries.com/v2/all')
+	return data.map(country => {
+		if(country?.currencies) return [country.currencies[0].code, country.name]
+		return ''
+	})
 }
 
 export const getExchangeRate = async (fromCurr, toCurr) => {
-	// async await method
 	const {data: {rates}} = await axios.get(`${URL}?access_key=${API_KEY}`)
 	const euro = 1 / rates[fromCurr]
 	const exchanged = euro * rates[toCurr]
@@ -40,6 +42,5 @@ export const convertCurrency = async (fromCurr, toCurr, amount) => {
 	const countries = await getCountries(toCurr)
 
 	const convertAmt = (amount * exchangeRate).toFixed(2)
-	console.log(`${amount} ${fromCurr} is worth ${convertAmt} ${toCurr}. It can be used in: ${countries}`)
 	return `${amount} ${fromCurr} is worth ${convertAmt} ${toCurr}. It can be used in: ${countries}`
 }
